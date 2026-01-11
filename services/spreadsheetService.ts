@@ -4,7 +4,7 @@
  */
 
 // PENTING: Ganti URL di bawah ini dengan URL Web App (Exec) hasil Deploy backend.gs Anda
-const SPREADSHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrlJUMn-mH9xdk1w_6hH1ELeJjL0yjqriGZZ31d1fDwPLXZi0rN-Ncaar08QKM8nXG/exec'; 
+const SPREADSHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwUzO7W_DWZ90MaC6ThCxl97STGuXWyOH4L_xkiVwdbBA6t3IdKHtDukBvKbvjpEVdRmw/exec'; 
 
 const isUrlPlaceholder = (url: string) => {
   return !url || url.includes('MASUKKAN_URL') || url === '' || url.length < 20;
