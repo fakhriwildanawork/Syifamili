@@ -84,24 +84,22 @@ const KidsView: React.FC<KidsViewProps> = ({ member, allMembers, onSwitchMember,
     return (today.getFullYear() - bday.getFullYear()) * 12 + (today.getMonth() - bday.getMonth());
   }, [member.birthDate]);
 
-  useEffect(() => {
-    // Load Development Checklist
-    if (member.developmentChecklist) {
-      try {
-        setChecklist(JSON.parse(member.developmentChecklist));
-      } catch (e) { setChecklist({}); }
-    } else {
-      setChecklist({});
+  // Helper function to safely parse checklist data (handles strings and objects)
+  const parseChecklistData = (data: any) => {
+    if (!data) return {};
+    if (typeof data === 'object') return data;
+    try {
+      return JSON.parse(data);
+    } catch (e) {
+      console.warn("Failed to parse checklist JSON:", e);
+      return {};
     }
+  };
 
-    // Load Immunization Checklist
-    if (member.immunizationChecklist) {
-        try {
-            setImmuneChecklist(JSON.parse(member.immunizationChecklist));
-        } catch (e) { setImmuneChecklist({}); }
-    } else {
-        setImmuneChecklist({});
-    }
+  useEffect(() => {
+    // Load Development & Immunization Checklist robustly
+    setChecklist(parseChecklistData(member.developmentChecklist));
+    setImmuneChecklist(parseChecklistData(member.immunizationChecklist));
   }, [member.id, member.developmentChecklist, member.immunizationChecklist]);
 
   const handleGenerateGrowthAI = async () => {
@@ -153,6 +151,7 @@ const KidsView: React.FC<KidsViewProps> = ({ member, allMembers, onSwitchMember,
   const handleToggleChecklist = (item: string) => {
     const newChecklist = { ...checklist, [item]: !checklist[item] };
     setChecklist(newChecklist);
+    // Update parent state with object format (App.tsx and spreadsheetService will handle stringification if needed)
     onUpdateMember({ ...member, developmentChecklist: JSON.stringify(newChecklist) });
   };
 
